@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addItemBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        window.addInvoiceItem();
+        addInvoiceItem();
         console.log("Item added successfully");
       });
     } catch (error) {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       generatePreviewBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        window.generatePreview();
+        generatePreview();
         console.log("Preview generated");
       });
     }
@@ -78,18 +78,18 @@ document.addEventListener("DOMContentLoaded", () => {
       printInvoiceBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        window.printInvoice();
+        printInvoice();
         console.log("Printing invoice");
       });
     }
 
     const gstRateInput = document.getElementById("gstRate");
     if (gstRateInput) {
-      gstRateInput.addEventListener("input", () => window.calculateTotals());
+      gstRateInput.addEventListener("input", calculateTotals);
     }
 
-    window.addInvoiceItem();
-    window.calculateTotals();
+    addInvoiceItem();
+    calculateTotals();
   }
 
   // History page
