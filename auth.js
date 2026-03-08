@@ -1,5 +1,5 @@
 // SwiftInvoice Authentication - PHP Backend Version
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = window.location.origin;
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");

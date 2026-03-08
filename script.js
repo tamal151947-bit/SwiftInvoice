@@ -1,5 +1,5 @@
 // SwiftInvoice Dashboard & Invoicing - PHP Backend Version
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = window.location.origin;
 const PROFILE_KEY = "swiftInvoiceProfile";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- PROFILE FUNCTIONS ---
   async function loadProfileData() {
     try {
-      const response = await fetch(`${API_BASE_URL}/profile/get`);
+      const response = await fetch(`${API_BASE_URL}/profile`);
       const data = await response.json();
 
       if (data.success && data.profile) {
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/profile/update`, {
+      const response = await fetch(`${API_BASE_URL}/profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profileData)
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/invoice/create`, {
+      const response = await fetch(`${API_BASE_URL}/api_invoices.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(invoiceData)
