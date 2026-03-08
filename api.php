@@ -50,111 +50,128 @@ switch ($endpoint) {
 }
 
 function getInvoices($user_id, $conn) {
-    $result = $conn->query("SELECT * FROM invoices WHERE user_id = $user_id ORDER BY created_at DESC LIMIT 50");
-    $invoices = [];
-    
-    while ($row = $result->fetch_assoc()) {
-        $row['items'] = json_decode($row['items'], true);
-        $invoices[] = $row;
+    try {
+        $stmt = $conn->prepare("SELECT * FROM invoices WHERE user_id = ? ORDER BY created_at DESC LIMIT 50");
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $invoices = [];
+        
+        foreach ($result as $row) {
+            $row['items'] = json_decode($row['items'], true);
+            $invoices[] = $row;
+        }
+        
+        echo json_encode(['success' => true, 'invoices' => $invoices]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
-    
-    echo json_encode(['success' => true, 'invoices' => $invoices]);
 }
 
 function createInvoice($user_id, $conn) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    
-    $invoice_number = $data['id'] ?? time();
-    $invoice_date = $conn->real_escape_string($data['date'] ?? date('Y-m-d'));
-    $customer_name = $conn->real_escape_string($data['customer'] ?? 'Unnamed Customer');
-    $customer_email = $conn->real_escape_string($data['customerEmail'] ?? '');
-    $customer_phone = $conn->real_escape_string($data['customerPhone'] ?? '');
-    $subtotal = $data['subtotal'] ?? 0;
-    $gst_rate = $data['gstRate'] ?? 0;
-    $gst_amount = $data['gstAmount'] ?? 0;
-    $total_amount = $data['amount'] ?? 0;
-    $payment_method = $conn->real_escape_string($data['paymentMethod'] ?? 'Cash');
-    $items = $conn->real_escape_string(json_encode($data['items'] ?? []));
-    
-    $sql = "INSERT INTO invoices (
-        user_id, invoice_number, invoice_date, customer_name, customer_email, customer_phone,
-        subtotal, gst_rate, gst_amount, total_amount, payment_method, items, status
-    ) VALUES (
-        $user_id, $invoice_number, '$invoice_date', '$customer_name', '$customer_email', '$customer_phone',
-        $subtotal, $gst_rate, $gst_amount, $total_amount, '$payment_method', '$items', 'Pending'
-    )";
-    
-    if ($conn->query($sql)) {
+    try {
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        $invoice_number = $data['id'] ?? time();
+        $invoice_date = $data['date'] ?? date('Y-m-d');
+        $customer_name = $data['customer'] ?? 'Unnamed Customer';
+        $customer_email = $data['customerEmail'] ?? '';
+        $customer_phone = $data['customerPhone'] ?? '';
+        $subtotal = $data['subtotal'] ?? 0;
+        $gst_rate = $data['gstRate'] ?? 0;
+        $gst_amount = $data['gstAmount'] ?? 0;
+        $total_amount = $data['amount'] ?? 0;
+        $payment_method = $data['paymentMethod'] ?? 'Cash';
+        $items = json_encode($data['items'] ?? []);
+        
+        $stmt = $conn->prepare("INSERT INTO invoices (
+            user_id, invoice_number, invoice_date, customer_name, customer_email, customer_phone,
+            subtotal, gst_rate, gst_amount, total_amount, payment_method, items, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        $stmt->execute([$user_id, $invoice_number, $invoice_date, $customer_name, $customer_email, $customer_phone,
+                       $subtotal, $gst_rate, $gst_amount, $total_amount, $payment_method, $items, 'Paid']);
+        
         echo json_encode(['success' => true, 'message' => 'Invoice created', 'invoice_id' => $invoice_number]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $conn->error]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
 
 function getDashboard($user_id, $conn) {
-    $result = $conn->query("SELECT SUM(total_amount) as total_sales, COUNT(*) as invoice_count FROM invoices WHERE user_id = $user_id");
-    $stats = $result->fetch_assoc();
-    
-    $invoices_result = $conn->query("SELECT * FROM invoices WHERE user_id = $user_id ORDER BY created_at DESC LIMIT 10");
-    $recent_invoices = [];
-    while ($row = $invoices_result->fetch_assoc()) {
-        $recent_invoices[] = $row;
+    try {
+        $stmt = $conn->prepare("SELECT SUM(total_amount) as total_sales, COUNT(*) as invoice_count FROM invoices WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $stmt = $conn->prepare("SELECT * FROM invoices WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
+        $stmt->execute([$user_id]);
+        $recent_invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['success' => true, 'stats' => $stats, 'recent_invoices' => $recent_invoices]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
-    
-    echo json_encode(['success' => true, 'stats' => $stats, 'recent_invoices' => $recent_invoices]);
 }
 
 function getProfile($user_id, $conn) {
-    $result = $conn->query("SELECT * FROM profiles WHERE user_id = $user_id");
-    
-    if ($result->num_rows > 0) {
-        $profile = $result->fetch_assoc();
-        echo json_encode(['success' => true, 'profile' => $profile]);
-    } else {
-        echo json_encode(['success' => true, 'profile' => null]);
+    try {
+        $stmt = $conn->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $profile = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['success' => true, 'profile' => $profile ?: null]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
 
 function updateProfile($user_id, $conn) {
-    $data = json_decode(file_get_contents('php://input'), true);
-    
-    $full_name = $conn->real_escape_string($data['fullName'] ?? '');
-    $email = $conn->real_escape_string($data['email'] ?? '');
-    $phone = $conn->real_escape_string($data['phoneNumber'] ?? '');
-    $shop_name = $conn->real_escape_string($data['shopName'] ?? '');
-    $gst_number = $conn->real_escape_string($data['gstNumber'] ?? '');
-    $location = $conn->real_escape_string($data['location'] ?? '');
-    
-    // Check if profile exists
-    $check = $conn->query("SELECT id FROM profiles WHERE user_id = $user_id");
-    
-    if ($check->num_rows > 0) {
-        // Update
-        $sql = "UPDATE profiles SET full_name = '$full_name', email = '$email', phone = '$phone', 
-                shop_name = '$shop_name', gst_number = '$gst_number', location = '$location'
-                WHERE user_id = $user_id";
-    } else {
-        // Insert
-        $sql = "INSERT INTO profiles (user_id, full_name, email, phone, shop_name, gst_number, location)
-                VALUES ($user_id, '$full_name', '$email', '$phone', '$shop_name', '$gst_number', '$location')";
-    }
-    
-    if ($conn->query($sql)) {
+    try {
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        $full_name = $data['fullName'] ?? '';
+        $email = $data['email'] ?? '';
+        $phone = $data['phoneNumber'] ?? '';
+        $shop_name = $data['shopName'] ?? '';
+        $gst_number = $data['gstNumber'] ?? '';
+        $location = $data['location'] ?? '';
+        
+        // Check if profile exists
+        $stmt = $conn->prepare("SELECT id FROM profiles WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($exists) {
+            // Update
+            $stmt = $conn->prepare("UPDATE profiles SET full_name = ?, email = ?, phone = ?, shop_name = ?, gst_number = ?, location = ? WHERE user_id = ?");
+            $stmt->execute([$full_name, $email, $phone, $shop_name, $gst_number, $location, $user_id]);
+        } else {
+            // Insert
+            $stmt = $conn->prepare("INSERT INTO profiles (user_id, full_name, email, phone, shop_name, gst_number, location) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$user_id, $full_name, $email, $phone, $shop_name, $gst_number, $location]);
+        }
+        
         echo json_encode(['success' => true, 'message' => 'Profile updated']);
-    } else {
-        echo json_encode(['success' => false, 'error' => $conn->error]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
 
 function getHistory($user_id, $conn) {
-    $result = $conn->query("SELECT * FROM invoices WHERE user_id = $user_id ORDER BY created_at DESC");
-    $invoices = [];
-    
-    while ($row = $result->fetch_assoc()) {
-        $row['items'] = json_decode($row['items'], true);
-        $invoices[] = $row;
+    try {
+        $stmt = $conn->prepare("SELECT * FROM invoices WHERE user_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$user_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $invoices = [];
+        
+        foreach ($result as $row) {
+            $row['items'] = json_decode($row['items'], true);
+            $invoices[] = $row;
+        }
+        
+        echo json_encode(['success' => true, 'invoices' => $invoices]);
+    } catch(Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
-    
-    echo json_encode(['success' => true, 'invoices' => $invoices]);
 }
 ?>
