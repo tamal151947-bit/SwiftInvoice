@@ -153,7 +153,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       if (data.success) {
         alert("Profile saved successfully!");
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData));
+        localStorage.setItem(PROFILE_KEY, JSON.stringify({
+          fullName: profileData.fullName,
+          email: profileData.email,
+          shopName: profileData.shopName,
+          location: profileData.location,
+          // Keep both old and new key styles for compatibility across pages.
+          gst: profileData.gstNumber,
+          gstNumber: profileData.gstNumber,
+          phone: profileData.phoneNumber,
+          phoneNumber: profileData.phoneNumber
+        }));
       } else {
         alert("Error: " + (data.error || "Failed to save"));
       }
@@ -174,12 +184,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- INVOICE FUNCTIONS ---
   async function loadBusinessProfile() {
-    const profile = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {};
-    document.getElementById("bizShopName").textContent = profile.shopName || "-";
-    document.getElementById("bizGst").textContent = profile.gst || "-";
-    document.getElementById("bizPhone").textContent = profile.phone || "-";
-    document.getElementById("bizLocation").textContent = profile.location || "-";
-    document.getElementById("bizEmail").textContent = profile.email || "-";
+    const localProfile = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {};
+    let serverProfile = {};
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/profile`);
+      const data = await response.json();
+      if (data.success && data.profile) {
+        serverProfile = data.profile;
+      }
+    } catch (error) {
+      console.error("Business profile load error:", error);
+    }
+
+    const merged = {
+      shopName: serverProfile.shop_name || serverProfile.shopName || localProfile.shopName || "",
+      gst: serverProfile.gst_number || serverProfile.gst || localProfile.gst || localProfile.gstNumber || "",
+      phone: serverProfile.phone || localProfile.phone || localProfile.phoneNumber || "",
+      location: serverProfile.location || localProfile.location || "",
+      email: serverProfile.email || localProfile.email || ""
+    };
+
+    document.getElementById("bizShopName").textContent = merged.shopName || "-";
+    document.getElementById("bizGst").textContent = merged.gst || "-";
+    document.getElementById("bizPhone").textContent = merged.phone || "-";
+    document.getElementById("bizLocation").textContent = merged.location || "-";
+    document.getElementById("bizEmail").textContent = merged.email || "-";
   }
 
   let itemCount = 0;
