@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-page="history">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="index.html">
+                <img src="SwiftInvoice.png" alt="SwiftInvoice logo">
+                <span>SwiftInvoice</span>
+            </a>
+            <div class="sidebar-top-actions">
+                <a class="btn btn-danger" href="login.html"><i class="fa-solid fa-right-from-bracket"></i>Log out</a>
+            </div>
+            <nav class="nav-menu">
+                <a class="nav-link" href="index.html"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+                <a class="nav-link active" href="history.html"><i class="fa-solid fa-clock-rotate-left"></i>Invoice
+                    History</a>
+                <a class="nav-link" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+            </nav>
+        </aside>
+
+        <main class="main-area">
+            <section class="hero-banner">
+                <div>
+                    <h1><i class="fa-solid fa-clock-rotate-left"></i> Invoice History</h1>
+                    <p>Manage and track all your invoices in one place.</p>
+                </div>
+                <a class="btn btn-light" href="invoice.html"><i class="fa-solid fa-plus"></i>Create New Invoice</a>
+            </section>
+
+            <section class="surface-card table-card">
+                <div class="section-title"><i class="fa-solid fa-file-lines"></i>All Invoices</div>
+                <div class="history-filters">
+                    <div class="field-group">
+                        <label for="historyCustomerSearch"><i class="fa-solid fa-user"></i>Search Customer</label>
+                        <input id="historyCustomerSearch" type="text" placeholder="Type customer name">
+                    </div>
+                    <div class="field-group">
+                        <label for="historyDateSearch"><i class="fa-solid fa-calendar"></i>Search Date</label>
+                        <input id="historyDateSearch" type="date">
+                    </div>
+                    <button id="clearHistoryFilters" class="btn btn-slate" type="button"><i
+                            class="fa-solid fa-rotate-left"></i>Clear</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fa-solid fa-hashtag"></i>INVOICE NO</th>
+                                <th><i class="fa-solid fa-user"></i>CUSTOMER</th>
+                                <th><i class="fa-solid fa-calendar"></i>DATE</th>
+                                <th><i class="fa-solid fa-indian-rupee-sign"></i>TOTAL (₹)</th>
+                                <th><i class="fa-solid fa-gears"></i>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

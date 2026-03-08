@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftInvoice Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-page="dashboard">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="index.html">
+                <img src="SwiftInvoice.png" alt="SwiftInvoice logo">
+                <span>SwiftInvoice</span>
+            </a>
+            <div class="sidebar-top-actions">
+                <a class="btn btn-danger" href="login.html"><i class="fa-solid fa-right-from-bracket"></i>Log out</a>
+            </div>
+            <nav class="nav-menu">
+                <a class="nav-link active" href="index.html"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+                <a class="nav-link" href="history.html"><i class="fa-solid fa-clock-rotate-left"></i>Invoice History</a>
+                <a class="nav-link" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+            </nav>
+        </aside>
+
+        <main class="main-area">
+            <section class="hero-banner">
+                <div>
+                    <h1><i class="fa-solid fa-chart-line"></i> Welcome Back!</h1>
+                    <p>Here's what's happening with your invoices today.</p>
+                </div>
+                <a class="btn btn-light" href="invoice.html"><i class="fa-solid fa-plus"></i>Create New Invoice</a>
+            </section>
+
+            <section class="stat-grid">
+                <article class="surface-card stat-card">
+                    <div class="stat-icon icon-green"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                    <h2 id="totalSales">₹0</h2>
+                    <p>Total Sales</p>
+                </article>
+                <article class="surface-card stat-card">
+                    <div class="stat-icon icon-blue"><i class="fa-solid fa-file-invoice"></i></div>
+                    <h2 id="invoiceCount">0</h2>
+                    <p>Invoices Generated</p>
+                </article>
+            </section>
+
+            <section class="surface-card table-card">
+                <div class="section-title"><i class="fa-solid fa-circle-dot"></i>Recent Invoices</div>
+                <div id="recentInvoiceList" class="invoice-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

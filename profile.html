@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <main class="login-screen">
+        <section class="profile-card">
+            <h1 class="page-title" style="text-align:left; margin-top:0;"><i class="fa-solid fa-user-gear"></i>Profile
+                Settings</h1>
+            <form id="profileForm" class="form-stack">
+                <div class="field-group">
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" type="text" placeholder="Enter your full name">
+                </div>
+                <div class="field-group">
+                    <label for="userPassword">Password</label>
+                    <input id="userPassword" type="password" placeholder="Enter your password">
+                </div>
+                <div class="field-group">
+                    <label for="shopName">Shop Name</label>
+                    <input id="shopName" type="text" placeholder="Enter shop name">
+                </div>
+                <div class="field-group">
+                    <label for="gstNumber">GST Number</label>
+                    <input id="gstNumber" type="text" placeholder="Enter GST number">
+                </div>
+                <div class="field-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input id="phoneNumber" type="text" placeholder="Enter phone number">
+                </div>
+                <div class="field-group">
+                    <label for="location">Location</label>
+                    <input id="location" type="text" placeholder="Enter business location">
+                </div>
+                <div class="field-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" placeholder="Enter business email">
+                </div>
+                <div class="field-group">
+                    <label for="signature">Digital Signature</label>
+                    <input id="signature" type="file" accept="image/*">
+                </div>
+
+                <section class="summary-box" style="margin-top:2px;">
+                    <h3><i class="fa-solid fa-address-card"></i>Profile Overview</h3>
+                    <div><span>Name:</span><strong id="viewName">-</strong></div>
+                    <div><span>Email ID:</span><strong id="viewEmail">-</strong></div>
+                    <div><span>Password:</span><strong id="viewPassword">-</strong></div>
+                    <div><span>Phone Number:</span><strong id="viewPhone">-</strong></div>
+                    <div><span>GST Number:</span><strong id="viewGst">-</strong></div>
+                    <div><span>Shop Name:</span><strong id="viewShop">-</strong></div>
+                    <div><span>Location:</span><strong id="viewLocation">-</strong></div>
+                </section>
+
+                <div class="action-row">
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i>Save
+                        Profile</button>
+                    <a href="index.html" class="btn btn-slate">Back to Dashboard</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

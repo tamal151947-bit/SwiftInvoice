@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftInvoice Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-page="login">
+  <main class="login-screen">
+    <section class="login-card">
+      <div class="brand" style="margin-bottom: 14px;">
+        <img src="SwiftInvoice.png" alt="SwiftInvoice logo">
+        <span>SwiftInvoice</span>
+      </div>
+      <h1 class="page-title" style="text-align:center; margin-bottom: 8px;">Welcome Back</h1>
+      <p style="text-align:center; color:#6d7a91; margin-top:0;">Sign in to continue to your invoice dashboard.</p>
+
+      <form id="loginForm" class="form-stack">
+        <p id="authMessage" class="form-message hidden"></p>
+        <div class="field-group">
+          <label for="email"><i class="fa-solid fa-envelope"></i>Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="field-group">
+          <label for="password"><i class="fa-solid fa-lock"></i>Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-success" style="justify-content:center;"><i
+            class="fa-solid fa-right-to-bracket"></i>Login</button>
+        <p class="auth-switch">New user? <a href="signup.html">Create account</a></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="auth.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-page="invoice">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <img src="SwiftInvoice.png" alt="SwiftInvoice logo">
+        <span>SwiftInvoice</span>
+      </a>
+      <div class="sidebar-top-actions">
+        <a class="btn btn-danger" href="login.html"><i class="fa-solid fa-right-from-bracket"></i>Log out</a>
+      </div>
+      <nav class="nav-menu">
+        <a class="nav-link" href="index.html"><i class="fa-solid fa-gauge"></i>Dashboard</a>
+        <a class="nav-link" href="history.html"><i class="fa-solid fa-clock-rotate-left"></i>Invoice History</a>
+        <a class="nav-link" href="profile.html"><i class="fa-solid fa-user"></i>Profile</a>
+      </nav>
+    </aside>
+
+    <main class="main-area">
+      <section class="surface-card invoice-builder">
+        <h1 class="page-title"><i class="fa-solid fa-file-invoice"></i>Invoice Generator</h1>
+
+        <div class="meta-banner">
+          <div class="brand-strip">
+            <img src="SwiftInvoice.png" alt="SwiftInvoice logo">
+            <span>SwiftInvoice</span>
+          </div>
+          <div class="date-input-wrap">
+            <label for="invoiceDate"><i class="fa-solid fa-calendar"></i>Date</label>
+            <input type="date" id="invoiceDate">
+          </div>
+        </div>
+
+        <section class="summary-box" style="margin-top:0; margin-bottom:12px;">
+          <h3><i class="fa-solid fa-building"></i>Business Profile (Saved)</h3>
+          <div><span>Shop Name:</span><strong id="bizShopName">-</strong></div>
+          <div><span>GST Number:</span><strong id="bizGst">-</strong></div>
+          <div><span>Phone:</span><strong id="bizPhone">-</strong></div>
+          <div><span>Location:</span><strong id="bizLocation">-</strong></div>
+          <div><span>Email:</span><strong id="bizEmail">-</strong></div>
+        </section>
+
+        <div class="input-grid three-col">
+          <div class="field-group">
+            <label for="customerName"><i class="fa-solid fa-user"></i>Customer Name</label>
+            <input id="customerName" type="text" placeholder="Enter customer name">
+          </div>
+          <div class="field-group">
+            <label for="customerEmail"><i class="fa-solid fa-envelope"></i>Email Address</label>
+            <input id="customerEmail" type="email" placeholder="Enter email address">
+          </div>
+          <div class="field-group">
+            <label for="customerPhone"><i class="fa-solid fa-phone"></i>Phone Number</label>
+            <input id="customerPhone" type="text" placeholder="Enter phone number">
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th><i class="fa-solid fa-box"></i>Item Description</th>
+                <th><i class="fa-solid fa-up-down-left-right"></i>Quantity</th>
+                <th><i class="fa-solid fa-indian-rupee-sign"></i>Unit Price</th>
+                <th><i class="fa-solid fa-receipt"></i>Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="invoiceItems"></tbody>
+          </table>
+        </div>
+
+        <button id="addItemBtn" class="btn btn-slate"><i class="fa-solid fa-plus"></i>Add New Item</button>
+
+        <div class="input-grid two-col compact">
+          <div class="field-group gst-wrap">
+            <label for="gstRate"><i class="fa-solid fa-percent"></i>GST Rate (%)</label>
+            <input id="gstRate" type="number" min="0" step="0.01" value="18">
+          </div>
+          <div class="field-group payment-wrap">
+            <label><i class="fa-solid fa-credit-card"></i>Payment Method</label>
+            <div class="payment-options">
+              <label><input type="radio" name="paymentMethod" value="Cash" checked>Cash</label>
+              <label><input type="radio" name="paymentMethod" value="Card">Card</label>
+              <label><input type="radio" name="paymentMethod" value="UPI">UPI</label>
+              <label><input type="radio" name="paymentMethod" value="Online Banking">Online Banking</label>
+            </div>
+          </div>
+        </div>
+
+        <section class="summary-box">
+          <h3><i class="fa-solid fa-clipboard-list"></i>Invoice Summary</h3>
+          <div><span>Subtotal:</span><strong id="summarySubtotal">₹0.00</strong></div>
+          <div><span>GST Amount:</span><strong id="summaryGst">₹0.00</strong></div>
+          <div><span>Total Amount:</span><strong id="summaryTotal">₹0.00</strong></div>
+        </section>
+
+        <div class="action-row">
+          <button id="generatePreviewBtn" class="btn btn-success"><i class="fa-solid fa-eye"></i>Generate
+            Preview</button>
+          <button id="printInvoiceBtn" class="btn btn-warning hidden"><i class="fa-solid fa-print"></i>Print
+            Invoice</button>
+        </div>
+      </section>
+
+      <section id="previewPanel" class="surface-card preview-panel hidden"></section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
