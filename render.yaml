@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: swiftinvoice
+    runtime: php
+    runtimeVersion: 8.1
+    buildCommand: |
+      php -r "
+      echo 'SwiftInvoice deployed to Render!';
+      "
+    startCommand: php -S 0.0.0.0:${PORT:-8080}
+    plan: free
+    envVars:
+      - key: DB_HOST
+        value: localhost
+      - key: DB_USER
+        value: root
+      - key: DB_PASSWORD
+        value: password
+      - key: DB_NAME
+        value: swiftinvoice_db

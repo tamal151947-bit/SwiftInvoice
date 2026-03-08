@@ -1,12 +1,13 @@
 <?php
-// Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'swiftinvoice');
+// Database Configuration - Support both environment variables and hardcoded values
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'swiftinvoice');
+define('DB_PORT', getenv('DB_PORT') ?: 3306);
 
 // Create connection
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD);
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, '', DB_PORT);
 
 // Check connection
 if ($conn->connect_error) {
