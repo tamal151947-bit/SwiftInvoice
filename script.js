@@ -3,7 +3,14 @@ const API_BASE_URL = window.location.origin;
 const PROFILE_KEY = "swiftInvoiceProfile";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  let user = null;
+  try {
+    user = JSON.parse(localStorage.getItem("currentUser") || "null");
+  } catch (error) {
+    console.error("Invalid currentUser in localStorage:", error);
+    localStorage.removeItem("currentUser");
+  }
+
   if (!user) {
     window.location.href = "login.html";
     return;
@@ -41,11 +48,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const addItemBtn = document.getElementById("addItemBtn");
   if (addItemBtn) {
     loadBusinessProfile();
-    document.getElementById("invoiceDate").valueAsDate = new Date();
+    const invoiceDateEl = document.getElementById("invoiceDate");
+    if (invoiceDateEl) {
+      invoiceDateEl.valueAsDate = new Date();
+    }
+
     addItemBtn.addEventListener("click", addInvoiceItem);
-    document.getElementById("generatePreviewBtn").addEventListener("click", generatePreview);
-    document.getElementById("printInvoiceBtn").addEventListener("click", printInvoice);
+
+    const generatePreviewBtn = document.getElementById("generatePreviewBtn");
+    const printInvoiceBtn = document.getElementById("printInvoiceBtn");
+    if (generatePreviewBtn) {
+      generatePreviewBtn.addEventListener("click", generatePreview);
+    }
+    if (printInvoiceBtn) {
+      printInvoiceBtn.addEventListener("click", printInvoice);
+    }
+
+    const gstRateInput = document.getElementById("gstRate");
+    if (gstRateInput) {
+      gstRateInput.addEventListener("input", calculateTotals);
+    }
+
     addInvoiceItem();
+    calculateTotals();
   }
 
   // History page
@@ -216,6 +241,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function addInvoiceItem() {
     const invoiceItems = document.getElementById("invoiceItems");
+    if (!invoiceItems) {
+      console.error("invoiceItems tbody not found");
+      return;
+    }
+
     itemCount++;
     const row = document.createElement("tr");
     row.id = `item-${itemCount}`;
