@@ -53,7 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
       invoiceDateEl.valueAsDate = new Date();
     }
 
-    addItemBtn.addEventListener("click", addInvoiceItem);
+    try {
+      addItemBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addInvoiceItem();
+        console.log("Item added successfully");
+      });
+    } catch (error) {
+      console.error("Error attaching click listener:", error);
+    }
 
     const generatePreviewBtn = document.getElementById("generatePreviewBtn");
     const printInvoiceBtn = document.getElementById("printInvoiceBtn");
@@ -239,27 +248,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let itemCount = 0;
 
-  function addInvoiceItem() {
-    const invoiceItems = document.getElementById("invoiceItems");
-    if (!invoiceItems) {
-      console.error("invoiceItems tbody not found");
-      return;
-    }
+  window.addInvoiceItem = function() {
+    try {
+      const invoiceItems = document.getElementById("invoiceItems");
+      if (!invoiceItems) {
+        console.error("invoiceItems tbody not found");
+        return;
+      }
 
-    itemCount++;
-    const row = document.createElement("tr");
-    row.id = `item-${itemCount}`;
-    row.innerHTML = `
-      <td><input type="text" class="item-desc" placeholder="Item description"></td>
-      <td><input type="number" class="item-qty" min="1" value="1"></td>
-      <td><input type="number" class="item-price" min="0" step="0.01" value="0"></td>
-      <td class="item-amount">₹0.00</td>
-      <td><button type="button" class="btn-icon btn-danger" onclick="removeItem('item-${itemCount}')"><i class="fa-solid fa-trash"></i></button></td>
-    `;
-    invoiceItems.appendChild(row);
-    row.querySelector(".item-qty").addEventListener("input", calculateTotals);
-    row.querySelector(".item-price").addEventListener("input", calculateTotals);
-  }
+      itemCount++;
+      const row = document.createElement("tr");
+      row.id = `item-${itemCount}`;
+      row.innerHTML = `
+        <td><input type="text" class="item-desc" placeholder="Item description"></td>
+        <td><input type="number" class="item-qty" min="1" value="1"></td>
+        <td><input type="number" class="item-price" min="0" step="0.01" value="0"></td>
+        <td class="item-amount">₹0.00</td>
+        <td><button type="button" class="btn-icon btn-danger" onclick="removeItem('item-${itemCount}')"><i class="fa-solid fa-trash"></i></button></td>
+      `;
+      invoiceItems.appendChild(row);
+      const qtyInput = row.querySelector(".item-qty");
+      const priceInput = row.querySelector(".item-price");
+      if (qtyInput) qtyInput.addEventListener("input", calculateTotals);
+      if (priceInput) priceInput.addEventListener("input", calculateTotals);
+      calculateTotals();
+      console.log(`Item #${itemCount} added, total rows: ${document.querySelectorAll('#invoiceItems tr').length}`);
+    } catch (error) {
+      console.error("Error in addInvoiceItem:", error);
+    }
+  };
 
   function removeItem(id) {
     const elem = document.getElementById(id);
