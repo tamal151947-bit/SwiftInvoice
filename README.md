@@ -1,6 +1,6 @@
 # SwiftInvoice 🚀
 
-> Fast, simple, and professional invoice generation for small businesses.
+Fast, simple, and professional invoice generation for small businesses.
 
 🌐 **Live App:** https://swiftinvoice-2.onrender.com
 
