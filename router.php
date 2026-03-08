@@ -8,6 +8,13 @@ if ($path !== '/' && file_exists($fullPath) && !is_dir($fullPath)) {
     return false;
 }
 
+// Root URL should open the login page
+if ($path === '/') {
+    header('Content-Type: text/html; charset=UTF-8');
+    readfile(__DIR__ . '/login.html');
+    exit;
+}
+
 // Auth routes
 if (preg_match('#^/auth/(login|signup|logout)$#', $path)) {
     require __DIR__ . '/api_auth.php';
