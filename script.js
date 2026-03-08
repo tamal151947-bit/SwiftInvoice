@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addItemBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        addInvoiceItem();
+        window.addInvoiceItem();
         console.log("Item added successfully");
       });
     } catch (error) {
@@ -75,11 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const gstRateInput = document.getElementById("gstRate");
     if (gstRateInput) {
-      gstRateInput.addEventListener("input", calculateTotals);
+      gstRateInput.addEventListener("input", () => window.calculateTotals());
     }
 
-    addInvoiceItem();
-    calculateTotals();
+    window.addInvoiceItem();
+    window.calculateTotals();
   }
 
   // History page
@@ -269,9 +269,9 @@ document.addEventListener("DOMContentLoaded", () => {
       invoiceItems.appendChild(row);
       const qtyInput = row.querySelector(".item-qty");
       const priceInput = row.querySelector(".item-price");
-      if (qtyInput) qtyInput.addEventListener("input", calculateTotals);
-      if (priceInput) priceInput.addEventListener("input", calculateTotals);
-      calculateTotals();
+      if (qtyInput) qtyInput.addEventListener("input", () => window.calculateTotals());
+      if (priceInput) priceInput.addEventListener("input", () => window.calculateTotals());
+      window.calculateTotals();
       console.log(`Item #${itemCount} added, total rows: ${document.querySelectorAll('#invoiceItems tr').length}`);
     } catch (error) {
       console.error("Error in addInvoiceItem:", error);
@@ -281,31 +281,39 @@ document.addEventListener("DOMContentLoaded", () => {
   function removeItem(id) {
     const elem = document.getElementById(id);
     if (elem) elem.remove();
-    calculateTotals();
+    window.calculateTotals();
   }
 
   window.removeItem = removeItem;
 
-  function calculateTotals() {
-    let subtotal = 0;
-    document.querySelectorAll("#invoiceItems tr").forEach(row => {
-      const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
-      const price = parseFloat(row.querySelector(".item-price").value) || 0;
-      const amount = qty * price;
-      row.querySelector(".item-amount").textContent = "₹" + amount.toFixed(2);
-      subtotal += amount;
-    });
+  window.calculateTotals = function() {
+    try {
+      let subtotal = 0;
+      document.querySelectorAll("#invoiceItems tr").forEach(row => {
+        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+        const price = parseFloat(row.querySelector(".item-price").value) || 0;
+        const amount = qty * price;
+        row.querySelector(".item-amount").textContent = "₹" + amount.toFixed(2);
+        subtotal += amount;
+      });
 
-    const gstRate = parseFloat(document.getElementById("gstRate").value) || 0;
-    const gstAmount = (subtotal * gstRate) / 100;
-    const total = subtotal + gstAmount;
+      const gstRate = parseFloat(document.getElementById("gstRate").value) || 0;
+      const gstAmount = (subtotal * gstRate) / 100;
+      const total = subtotal + gstAmount;
 
-    document.getElementById("summarySubtotal").textContent = "₹" + subtotal.toFixed(2);
-    document.getElementById("summaryGst").textContent = "₹" + gstAmount.toFixed(2);
-    document.getElementById("summaryTotal").textContent = "₹" + total.toFixed(2);
-  }
+      const summarySubtotal = document.getElementById("summarySubtotal");
+      const summaryGst = document.getElementById("summaryGst");
+      const summaryTotal = document.getElementById("summaryTotal");
+      
+      if (summarySubtotal) summarySubtotal.textContent = "₹" + subtotal.toFixed(2);
+      if (summaryGst) summaryGst.textContent = "₹" + gstAmount.toFixed(2);
+      if (summaryTotal) summaryTotal.textContent = "₹" + total.toFixed(2);
+    } catch (error) {
+      console.error("Error calculating totals:", error);
+    }
+  };
 
-  function generatePreview() {
+  window.generatePreview = function() {
     const items = [];
     document.querySelectorAll("#invoiceItems tr").forEach(row => {
       items.push({
@@ -465,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 8000);
   }
 
-  function printInvoice() {
+  window.printInvoice = function() {
     const invoiceContent = document.querySelector('.invoice-preview');
     if (!invoiceContent) {
       alert("Please generate preview first!");
@@ -489,7 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
       printWindow.print();
       printWindow.close();
     }, 250);
-  }
+  };
 
   // --- HISTORY FUNCTIONS ---
   async function loadHistory() {
