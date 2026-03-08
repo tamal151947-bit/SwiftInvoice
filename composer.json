@@ -1,0 +1,13 @@
+{
+  "name": "tamal151947-bit/swiftinvoice",
+  "description": "Professional Invoice Generator with PHP Backend",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^7.4 || ^8.0"
+  },
+  "require-dev": {},
+  "config": {
+    "optimize-autoloader": true
+  }
+}
