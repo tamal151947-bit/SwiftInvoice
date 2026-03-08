@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let itemCount = 0;
 
-  window.addInvoiceItem = function() {
+  function addInvoiceItem() {
     try {
       const invoiceItems = document.getElementById("invoiceItems");
       if (!invoiceItems) {
@@ -286,7 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error in addInvoiceItem:", error);
     }
-  };
+  }
+
+  window.addInvoiceItem = addInvoiceItem;
 
   function removeItem(id) {
     const elem = document.getElementById(id);
@@ -296,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.removeItem = removeItem;
 
-  window.calculateTotals = function() {
+  function calculateTotals() {
     try {
       let subtotal = 0;
       document.querySelectorAll("#invoiceItems tr").forEach(row => {
@@ -321,9 +323,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error calculating totals:", error);
     }
-  };
+  }
 
-  window.generatePreview = function() {
+  window.calculateTotals = calculateTotals;
+
+  function generatePreview() {
     const items = [];
     document.querySelectorAll("#invoiceItems tr").forEach(row => {
       items.push({
@@ -426,6 +430,8 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateTotals();
   }
 
+  window.generatePreview = generatePreview;
+
   async function saveInvoiceToServer(invoiceNo, invoiceDate, items, subtotal, gstRate, gstAmount, total) {
     const invoiceData = {
       id: invoiceNo,
@@ -483,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 8000);
   }
 
-  window.printInvoice = function() {
+  function printInvoice() {
     const invoiceContent = document.querySelector('.invoice-preview');
     if (!invoiceContent) {
       alert("Please generate preview first!");
@@ -507,7 +513,9 @@ document.addEventListener("DOMContentLoaded", () => {
       printWindow.print();
       printWindow.close();
     }, 250);
-  };
+  }
+
+  window.printInvoice = printInvoice;
 
   // --- HISTORY FUNCTIONS ---
   async function loadHistory() {
