@@ -2,7 +2,7 @@
 
 > Fast, simple, and professional invoice generation for small businesses.
 
-🌐 **Live App:** `https://swiftinvoice-2.onrender.com`
+🌐 **Live App:** https://swiftinvoice-2.onrender.com
 
 ---
 
