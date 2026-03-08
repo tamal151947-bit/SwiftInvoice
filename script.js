@@ -67,10 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const generatePreviewBtn = document.getElementById("generatePreviewBtn");
     const printInvoiceBtn = document.getElementById("printInvoiceBtn");
     if (generatePreviewBtn) {
-      generatePreviewBtn.addEventListener("click", generatePreview);
+      generatePreviewBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.generatePreview();
+        console.log("Preview generated");
+      });
     }
     if (printInvoiceBtn) {
-      printInvoiceBtn.addEventListener("click", printInvoice);
+      printInvoiceBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.printInvoice();
+        console.log("Printing invoice");
+      });
     }
 
     const gstRateInput = document.getElementById("gstRate");
